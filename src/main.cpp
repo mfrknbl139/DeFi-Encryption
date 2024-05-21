@@ -4,12 +4,12 @@
 #include "models/Transaction.h"
 
 void printMenu() {
-    std::cout << "=========== MENU ===========" << std::endl;
+    std::cout << "================= MENU =================" << std::endl;
     std::cout << "1. Gonderen ve Alici Adreslerini Olustur" << std::endl;
     std::cout << "2. Islem Olustur ve Blockchain'e Ekle" << std::endl;
     std::cout << "3. Blockchain'i Goruntule" << std::endl;
     std::cout << "4. Cikis" << std::endl;
-    std::cout << "============================" << std::endl;
+    std::cout << "========================================" << std::endl;
     std::cout << "Seciminizi yapin: ";
 }
 
@@ -28,7 +28,7 @@ int main() {
                 senderWallet.generateAddress();
                 receiverWallet.generateAddress();
                 std::cout << "Gonderen Adres: " << senderWallet.getAddress() << std::endl;
-                std::cout << "Alici Adres: " << receiverWallet.getAddress() << std::endl;
+                std::cout << "Alici Adres   : " << receiverWallet.getAddress() << std::endl;
                 break;
             }
             case 2: {
