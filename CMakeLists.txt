@@ -7,32 +7,34 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Add include directories
 include_directories(include)
-include_directories(libs/CryptoPP)
-
-# If Crypto++ is installed system-wide, you might not need the above include_directories line for CryptoPP
-# and instead use find_package to locate it, or link it directly if it's in a known location
+include_directories(libs/x64-windows/include)
+include_directories(libs/x64-windows/include/cryptopp)
 
 # Define the source files and headers for the main application
-file(GLOB SOURCES "src/*.cpp" "src/blockchain/*.cpp" "src/crypto/*.cpp" "src/models/*.cpp" "src/utils/*.cpp")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/blockchain/*.cpp" "src/models/*.cpp" "src/utils/*.cpp" "src/crypto/*.cpp")
+file(GLOB_RECURSE HEADERS "include/*.h" "include/blockchain/*.h" "include/models/*.h" "include/utils/*.h" "include/crypto/*.h")
 
 # Add the executable for the main application
-add_executable(DeFiProject ${SOURCES})
+add_executable(DeFiProject ${SOURCES} ${HEADERS})
+
+# Specify the path to Crypto++ library
+set(CRYPTOPP_DIR "${CMAKE_SOURCE_DIR}/libs/x64-windows")
+find_library(CRYPTOPP_LIB cryptopp PATHS ${CRYPTOPP_DIR}/lib)
 
 # Link against the Crypto++ library
-target_link_libraries(DeFiProject cryptopp)
+target_link_libraries(DeFiProject ${CRYPTOPP_LIB})
 
-# For tests
 # Enable testing functionalities in CMake
 enable_testing()
 
 # Define the source files for the tests
-set(TEST_SOURCES tests/crypto_tests.cpp)
+file(GLOB_RECURSE TEST_SOURCES tests/*.cpp)
 
 # Add the executable for tests
-add_executable(cryptoTests ${TEST_SOURCES})
+add_executable(cryptoTests ${TEST_SOURCES} src/crypto/Encryption.cpp src/crypto/Hashing.cpp)
 
-# Link the test executable against Crypto++ (and potentially other libraries)
-target_link_libraries(cryptoTests cryptopp)
+# Link the test executable against Crypto++
+target_link_libraries(cryptoTests ${CRYPTOPP_LIB})
 
 # Add the test to CMake's testing framework
 add_test(NAME CryptoTests COMMAND cryptoTests)

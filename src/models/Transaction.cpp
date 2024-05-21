@@ -1,11 +1,8 @@
-#include "Transaction.h"
+#include "models/Transaction.h"
 
-Transaction::Transaction(const std::string& fromAddress, const std::string& toAddress, float amount) {
-    this->fromAddress = fromAddress;
-    this->toAddress = toAddress;
-    this->amount = amount;
-}
+Transaction::Transaction(const std::string& sender, const std::string& receiver, double amount)
+    : fromAddress(sender), toAddress(receiver), amount(amount) {}
 
 std::string Transaction::toString() const {
-    return fromAddress + "->" + toAddress + ": " + std::to_string(amount);
+    return "From: " + fromAddress + ", To: " + toAddress + ", Amount: " + std::to_string(amount);
 }

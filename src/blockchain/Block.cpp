@@ -1,14 +1,36 @@
-#include "Block.h"
-#include "Hashing.h" // Assuming Hashing.cpp provides a simpleHash function
+#include "blockchain/Block.h"
+#include "crypto/Hashing.h"
+#include <sstream>
+#include <iomanip>
 
-Block::Block(uint32_t indexIn, const std::string &dataIn) : index(indexIn), data(dataIn) {
+// Varsayılan yapıcı
+Block::Block() : index(0), timestamp(0), data(""), nonce(-1), hash(""), prevHash("") {}
+
+// Parametreli yapıcı
+Block::Block(uint32_t indexIn, const std::string& dataIn) : index(indexIn), data(dataIn) {
     nonce = -1;
-    time = time(nullptr);
+    timestamp = std::time(nullptr);
     hash = calculateHash();
 }
 
 std::string Block::calculateHash() const {
     std::stringstream ss;
-    ss << index << time << data << nonce << prevHash;
-    return simpleHash(ss.str()); // simpleHash is a simplified hashing function
+    ss << index << timestamp << data << nonce << prevHash;
+    return simpleHash(ss.str());
+}
+
+void Block::mineBlock(uint32_t difficulty) {
+    char* cstr = new char[difficulty + 1];
+    for (uint32_t i = 0; i < difficulty; ++i) {
+        cstr[i] = '0';
+    }
+    cstr[difficulty] = '\0';
+    std::string str(cstr);
+
+    do {
+        nonce++;
+        hash = calculateHash();
+    } while (hash.substr(0, difficulty) != str);
+
+    delete[] cstr;
 }
